@@ -1,2 +1,5 @@
+#! /bin/bash
+
 unset MARLIN_DLL
-export MARLIN_DLL=/afs/ihep.ac.cn/soft/common/gcc/v01-17-05/LCFIPlus/v00-05-02/lib/libLCFIPlus.so
+export MARLIN_DLL=$(cd $(dirname $BASH_SOURCE); pwd)/lib/libHiggsTruthAna.so
+echo "Set MARLIN_DLL = $MARLIN_DLL"
