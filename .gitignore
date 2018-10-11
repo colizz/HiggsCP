@@ -1,0 +1,10 @@
+# folders
+run/
+build/
+lib/
+submit/sub_file
+fastjet*
+
+# files
+*.slcio
+*.log

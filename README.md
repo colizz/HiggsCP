@@ -26,7 +26,7 @@ First you need to have simulated MC files. You can find all freshly prepared sig
 >- Run `Marlin reco_001.xml` and wait for years.
 
 ## Setup
-Like normal [*`Marlin` framework*](https://github.com/iLCSoft/Marlin), codes are established under `src/`, head files under `include/`, and a steering file `steer.xml` is needed to define Marlin Processor. To setup the package, run the code under a machine where `Marlin` is already installed.
+Like normal [*`Marlin` framework*](https://github.com/iLCSoft/Marlin), codes are established under `src/`, head files under `include/`, and a steering file `steer.xml` is required to define Marlin Processor. To setup the package, run the code under a machine where `Marlin` is already installed.
 
 ```sh
 git clone https://:@gitlab.cern.ch:8443/coli/HiggsCP.git HiggsCP
@@ -48,9 +48,8 @@ Marlin steer.xml  --global.MaxRecordNumber=5  --MyExportEvt.TreeOutputFile=/the/
 
 After some while you will find output root files under ......
 
-**Note: variables are defined and commented in head files under `include/`, please have a look.**
+**Note: Comments and descriptions for each variable can be found in corresponding `src/*.cxx` file where they are defined, please have a look.**
 
 
 To be continue...
 ------------
-Marlin ExportEvt_steer.xml  --global.LCIOInputFiles=/afs/ihep.ac.cn/users/l/licq/licq/Reco_qqh_001.slcio  --global.MaxRecordNumber=3

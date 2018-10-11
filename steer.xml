@@ -3637,7 +3637,7 @@
     /cefs/higgs/licq/HiggsCP/sample/Reco.qqh.03620.slcio
 </parameter>
     <parameter name="GearXMLFile" value="GearOutput.xml"/>
-    <parameter name="MaxRecordNumber" value="1000"/>
+    <parameter name="MaxRecordNumber" value="500"/>
     <parameter name="SkipNEvents" value="0"/>
     <parameter name="SupressCheck" value="false"/>
     <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE </parameter>
@@ -3646,7 +3646,7 @@
 
 <processor name="MyHiggsTruthAna" type="HiggsTruthAna">
     <!--If zero an already existing file will not be overwritten.-->
-    <parameter name="OverwriteFile" type="int">0 </parameter>
+    <parameter name="OverwriteFile" type="int">1 </parameter>
     <!--Remind after every n events.-->
     <parameter name="EvtReminder" type="int">50 </parameter>
     <!--The name of the ROOT tree-->

@@ -43,7 +43,6 @@ class HiggsTruthAna : public marlin::Processor
         
         std::vector<int> *iStable_v;
         int ih, iTauP, iTauM, modeTauP, modeTauM;
-        std::vector<long> *ptr_TauMJet_v, *ptr_TauPJet_v, *ptr_ZjJet_v;
         
         TLorentzVector *t_p4_h, *t_p4_Z, *t_p4_ZJet, *t_p4_TauM, *t_p4_TauMJet, *t_p4_TauP, *t_p4_TauPJet;
         TLorentzVector *t_p4_vtP, *t_p4_c1P, *t_p4_c2P, *t_p4_c3P, *t_p4_n1P, *t_p4_n2P, *t_p4_n3P;

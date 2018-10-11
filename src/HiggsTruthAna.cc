@@ -182,11 +182,13 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                 if(iTauP>=0 && iTauM>=0) break;
             }
             if (iTauM<0 || iTauP<0)  throw lcio::DataNotAvailableException("Can't find MC tau");
-            cout<<"Bingo!!!"<<endl;
+            cout<<"Bingo!!!  Evt "<<nEvt<<endl;
             
             
             // find tau+/- decay mode. For each mode, identify muon/elec/pions... as decay product
             modeTauP = -99;  modeTauM = -99;
+            t_p4_vtP->SetXYZT(0,0,0,0); t_p4_c1P->SetXYZT(0,0,0,0); t_p4_c2P->SetXYZT(0,0,0,0); t_p4_c3P->SetXYZT(0,0,0,0); t_p4_n1P->SetXYZT(0,0,0,0); t_p4_n2P->SetXYZT(0,0,0,0); t_p4_n3P->SetXYZT(0,0,0,0);     t_p4_vtM->SetXYZT(0,0,0,0); t_p4_c1M->SetXYZT(0,0,0,0); t_p4_c2M->SetXYZT(0,0,0,0); t_p4_c3M->SetXYZT(0,0,0,0); t_p4_n1M->SetXYZT(0,0,0,0); t_p4_n2M->SetXYZT(0,0,0,0); t_p4_n3M->SetXYZT(0,0,0,0);
+    
             MCParticle* ivtP=nullptr, *ic1P=nullptr, *ic2P=nullptr, *ic3P=nullptr, *in1P=nullptr, *in2P=nullptr, *in3P=nullptr, *ivtM=nullptr, *ic1M=nullptr, *ic2M=nullptr, *ic3M=nullptr, *in1M=nullptr, *in2M=nullptr, *in3M=nullptr;
             
             vector<int> tdecay; // save PDG of decay objects
@@ -304,6 +306,8 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
             
             
             // find TauJet segments that can be detected 
+            t_p4_TauM->SetXYZT(0,0,0,0); t_p4_TauMJet->SetXYZT(0,0,0,0);
+            t_p4_TauP->SetXYZT(0,0,0,0); t_p4_TauPJet->SetXYZT(0,0,0,0);
             vector<MCParticle*> ptr_TauPJet_v;
             vector<MCParticle*> ptr_TauMJet_v;
             std::queue<MCParticle*> ptr_TauP_q, ptr_TauM_q;
@@ -340,11 +344,13 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                         for(unsigned k=0; k<ip->getDaughters().size(); k++)
                             ptr_TauM_q.push( ip->getDaughters()[k] );
                 }
-            }
+            } 
             std::sort(ptr_TauPJet_v.begin(), ptr_TauPJet_v.end()); // sort tau+ decay product in id increasing order
             std::sort(ptr_TauMJet_v.begin(), ptr_TauMJet_v.end());
+            
             *t_p4_TauP = TLorentzVector( mcp[iTauP]->getMomentum(), mcp[iTauP]->getEnergy() ); // mc tau+ 4-momentum
             *t_p4_TauM = TLorentzVector( mcp[iTauM]->getMomentum(), mcp[iTauM]->getEnergy() );
+            
             MCParticle* ptemp = nullptr;
             for (unsigned k=0; k<ptr_TauPJet_v.size(); k++) // mc tau+ jet 4-momentum
                 if (ptemp!=ptr_TauPJet_v[k]) {
@@ -357,9 +363,14 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                     ptemp = ptr_TauMJet_v[k];
                     *t_p4_TauMJet += TLorentzVector( ptr_TauMJet_v[k]->getMomentum(), ptr_TauMJet_v[k]->getEnergy() );
                 }
+            cout<<"Tau+   "; PrintTLorentzVector(*t_p4_TauP); cout<<endl;
+            cout<<"Tau+Jet"; PrintTLorentzVector(*t_p4_TauPJet); cout<<endl;
+            cout<<"Tau-   "; PrintTLorentzVector(*t_p4_TauM); cout<<endl;
+            cout<<"Tau-Jet"; PrintTLorentzVector(*t_p4_TauMJet); cout<<endl;
             
             
             // Z -> jj, find the last possible iZj1, iZj2
+            t_p4_h->SetXYZT(0,0,0,0); t_p4_Z->SetXYZT(0,0,0,0); t_p4_ZJet->SetXYZT(0,0,0,0); 
             vector<MCParticle*> ptr_ZjJet_v;
             MCParticle *ptr_Zj1 = nullptr, *ptr_Zj2 = nullptr;
             for (int i=0; i<10; i++)
@@ -419,6 +430,9 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                     *t_p4_ZJet += TLorentzVector( ptr_ZjJet_v[k]->getMomentum(), ptr_ZjJet_v[k]->getEnergy() );
                 }
             
+            // cout<<"Higgs "; PrintTLorentzVector(*t_p4_h); cout<<" mass: "<<t_p4_h->M()<<endl;
+            // cout<<"Z     "; PrintTLorentzVector(*t_p4_Z); cout<<" mass: "<<t_p4_Z->M()<<endl;
+            // cout<<"Z Jet "; PrintTLorentzVector(*t_p4_ZJet); cout<<" mass: "<<t_p4_ZJet->M()<<endl;
             _outputTree->Fill();
         } 
         catch (lcio::DataNotAvailableException err) { /*  cout<<err.what()<<endl;*/ }
