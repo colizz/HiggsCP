@@ -32,7 +32,7 @@ Like normal [*`Marlin` framework*](https://github.com/iLCSoft/Marlin), codes are
 git clone https://:@gitlab.cern.ch:8443/coli/HiggsCP.git HiggsCP
 cd HiggsCP
 mkdir build run && cd build
-cmake -C $ILCSOFT/ILCSoft.cmake ..
+cmake -C /afs/ihep.ac.cn/soft/common/gcc/v01-17-05/ILCSoft.cmake .. ## path only available on IHEP environment
 make install
 ```
 Before the first run, please specify your own absolute path in `loadLDD.sh` and `steer.xml` by substituting paths containing `.../licq/HiggsCP/...`. Then try this:
@@ -40,7 +40,7 @@ Before the first run, please specify your own absolute path in `loadLDD.sh` and 
 source ../loadLDD.sh  ## load libraries, please always remember to do this
 Marlin steer.xml
 ```
-Here's a trick: you can limit the events number for the first try. `Marlin` procides a easy way to overwrite the processor parameter. Just re-specify them in command line:
+Here's a trick: you can limit the events number for the first try. `Marlin` provides an easy way to overwrite the processor parameter. Just redefine them in command line:
 ```ssh
 source ../loadLDD.sh
 Marlin steer.xml  --global.MaxRecordNumber=5  --MyExportEvt.TreeOutputFile=/the/path/you/like
@@ -48,7 +48,7 @@ Marlin steer.xml  --global.MaxRecordNumber=5  --MyExportEvt.TreeOutputFile=/the/
 
 After some while you will find output root files under ......
 
-**Note: Comments and descriptions for each variable can be found in corresponding `src/*.cxx` file where they are defined, please have a look.**
+**Note: Comments and descriptions for each variable can be found in corresponding `src/*.cc` file where they are defined, please have a look.**
 
 
 To be continue...

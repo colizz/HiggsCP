@@ -84,12 +84,12 @@ void HiggsTruthAna::init() {
     _outputTree->Branch("iStable_v", "vector<int>", &iStable_v); // particles that reach the detectors, (MCParticle*)->int
     // _outputTree->Branch("iTauP", &iTauP, "iTauP/I"); // Tau+ pointer
     // _outputTree->Branch("iTauM", &iTauM, "iTauM/I"); // Tau- pointer
-    _outputTree->Branch("modeTauP", &modeTauP, "modeTauP/I"); // Tau+ decay mode
+    _outputTree->Branch("modeTauP", &modeTauP, "modeTauP/I"); // Tau+ decay mode, notation defined below
     _outputTree->Branch("modeTauM", &modeTauM, "modeTauM/I"); // Tau+ decay mode
     
-    // _outputTree->Branch("ptr_TauMJet_v", "vector<long>", &ptr_TauMJet_v); // Stable Tau+ decayed objects
-    // _outputTree->Branch("ptr_TauPJet_v", "vector<long>", &ptr_TauPJet_v); // Stable Tau- decayed objects
-    // _outputTree->Branch("ptr_ZjJet_v", "vector<long>", &ptr_ZjJet_v); // Stable Z decayed objects
+    // _outputTree->Branch("ptr_TauMJet_v", "vector<long>", &ptr_TauMJet_v); // stable Tau+ decay products
+    // _outputTree->Branch("ptr_TauPJet_v", "vector<long>", &ptr_TauPJet_v); // Stable Tau- decay products
+    // _outputTree->Branch("ptr_ZjJet_v", "vector<long>", &ptr_ZjJet_v); // Stable Z decay products
     
     t_p4_h = new TLorentzVector(0,0,0,0);
     t_p4_Z = new TLorentzVector(0,0,0,0);
@@ -98,14 +98,26 @@ void HiggsTruthAna::init() {
     t_p4_TauMJet = new TLorentzVector(0,0,0,0);
     t_p4_TauP = new TLorentzVector(0,0,0,0);
     t_p4_TauPJet = new TLorentzVector(0,0,0,0);
-    _outputTree->Branch("t_p4_h", "TLorentzVector", &t_p4_h); 
-    _outputTree->Branch("t_p4_Z", "TLorentzVector", &t_p4_Z); 
-    _outputTree->Branch("t_p4_ZJet", "TLorentzVector", &t_p4_ZJet); 
-    _outputTree->Branch("t_p4_TauM", "TLorentzVector", &t_p4_TauM); 
-    _outputTree->Branch("t_p4_TauMJet", "TLorentzVector", &t_p4_TauMJet); 
-    _outputTree->Branch("t_p4_TauP", "TLorentzVector", &t_p4_TauP); 
-    _outputTree->Branch("t_p4_TauPJet", "TLorentzVector", &t_p4_TauPJet); 
+    _outputTree->Branch("t_p4_h", "TLorentzVector", &t_p4_h); // higgs 4-momentum
+    _outputTree->Branch("t_p4_Z", "TLorentzVector", &t_p4_Z); // Z 4-momentum
+    _outputTree->Branch("t_p4_ZJet", "TLorentzVector", &t_p4_ZJet); // 4-mom from Z decay truth product
+    _outputTree->Branch("t_p4_TauM", "TLorentzVector", &t_p4_TauM); // 4-mom of Tau- 
+    _outputTree->Branch("t_p4_TauMJet", "TLorentzVector", &t_p4_TauMJet); // 4-mom from Tau- truth product 
+    _outputTree->Branch("t_p4_TauP", "TLorentzVector", &t_p4_TauP); // 4-mom of Tau+
+    _outputTree->Branch("t_p4_TauPJet", "TLorentzVector", &t_p4_TauPJet); // 4-mom from Tau+ truth product 
     
+    // TauP/M decay product in following notation 
+    // c123 means charged hadron, n123 are neutral pions, vt is tau neutrino
+    // modeTau       vt  c1  c2  c3  n1  n2  n3
+    //   1   1h0pi   √   √ 
+    //   2   1h1pi   √   √           √
+    //   3   1h2pi   √   √           √   √
+    //   4   1h3pi   √   √           √   √   v
+    //  11   3h0pi   √   √   √   √ 
+    //  12   3h1pi   √   √   √   √   √
+    //  13   3h2pi   √   √   √   √   √   √   √
+    //  -1   e       √   √           √
+    //  -2   mu      √   √           √
     t_p4_vtP = new TLorentzVector(0,0,0,0);
     t_p4_c1P = new TLorentzVector(0,0,0,0);
     t_p4_c2P = new TLorentzVector(0,0,0,0);
@@ -363,10 +375,10 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                     ptemp = ptr_TauMJet_v[k];
                     *t_p4_TauMJet += TLorentzVector( ptr_TauMJet_v[k]->getMomentum(), ptr_TauMJet_v[k]->getEnergy() );
                 }
-            cout<<"Tau+   "; PrintTLorentzVector(*t_p4_TauP); cout<<endl;
-            cout<<"Tau+Jet"; PrintTLorentzVector(*t_p4_TauPJet); cout<<endl;
-            cout<<"Tau-   "; PrintTLorentzVector(*t_p4_TauM); cout<<endl;
-            cout<<"Tau-Jet"; PrintTLorentzVector(*t_p4_TauMJet); cout<<endl;
+            // cout<<"Tau+   "; PrintTLorentzVector(*t_p4_TauP); cout<<endl;
+            // cout<<"Tau+Jet"; PrintTLorentzVector(*t_p4_TauPJet); cout<<endl;
+            // cout<<"Tau-   "; PrintTLorentzVector(*t_p4_TauM); cout<<endl;
+            // cout<<"Tau-Jet"; PrintTLorentzVector(*t_p4_TauMJet); cout<<endl;
             
             
             // Z -> jj, find the last possible iZj1, iZj2

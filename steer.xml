@@ -1,12 +1,3 @@
-<!--
-      Example steering file to run a standard reconstruction on the 3 ttbar events 
-      simulated with Mokka in this example dierectory.
-
-      Works with ilcsoft v01-15 (development release)
-
-      Defines the standard reconstruction for ILD.
--->
-
 <marlin>
    
 <execute>
@@ -3637,22 +3628,22 @@
     /cefs/higgs/licq/HiggsCP/sample/Reco.qqh.03620.slcio
 </parameter>
     <parameter name="GearXMLFile" value="GearOutput.xml"/>
-    <parameter name="MaxRecordNumber" value="500"/>
+    <parameter name="MaxRecordNumber" value="-1"/>
     <parameter name="SkipNEvents" value="0"/>
     <parameter name="SupressCheck" value="false"/>
-    <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE </parameter>
+    <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> SILENT </parameter>
     <parameter name="RandomSeed" value="1234567890" />
 </global>
 
 <processor name="MyHiggsTruthAna" type="HiggsTruthAna">
     <!--If zero an already existing file will not be overwritten.-->
-    <parameter name="OverwriteFile" type="int">1 </parameter>
+    <parameter name="OverwriteFile" type="int">0 </parameter>
     <!--Remind after every n events.-->
     <parameter name="EvtReminder" type="int">50 </parameter>
     <!--The name of the ROOT tree-->
-    <parameter name="TreeName" type="string">Tau </parameter>
+    <parameter name="TreeName" type="string">truth </parameter>
     <!--The name of the file to which the ROOT tree will be written-->
-    <parameter name="TreeOutputFile" type="string">run/evt_output_00001.root </parameter>
+    <parameter name="TreeOutputFile" type="string">run/out_truthana.root </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
 </processor>

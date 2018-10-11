@@ -1,10 +1,12 @@
-# folders
+## folders
 run/
 build/
 lib/
 submit/sub_file
 fastjet*
 
-# files
+## files
 *.slcio
 *.log
+*.err.*
+*.out.*
