@@ -2,7 +2,7 @@
 run/
 build/
 lib/
-submit/sub_file
+script/sub_file/
 fastjet*
 
 ## files
@@ -10,3 +10,6 @@ fastjet*
 *.log
 *.err.*
 *.out.*
+make.sh
+ml.sh
+out.particle_list.txt

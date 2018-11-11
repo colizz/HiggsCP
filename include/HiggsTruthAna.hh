@@ -17,36 +17,32 @@
 
 class HiggsTruthAna : public marlin::Processor
 {
-    public:
+   public:
+   
+    Processor*  newProcessor() { return new HiggsTruthAna ; }
+    HiggsTruthAna();
+    ~HiggsTruthAna() {};
+    void init();
+    void processEvent( LCEvent * evtP );
+    void end();
 
-        Processor*  newProcessor() { return new HiggsTruthAna ; }
+   protected:
+   
+    std::string _treeFileName;
+    std::string _treeName;
+    int _overwrite;
+    int _evtReminder;
+    TTree *_outputTree;
+    std::ostream *_output;
 
-        HiggsTruthAna();
+    int nMCP, nRecoP, nEvt;
 
-        ~HiggsTruthAna() {};
+    std::vector<int> *iStable_v;
+    int ih, iTauP, iTauM, modeTauP, modeTauM;
 
-        void init();
-
-        void processEvent( LCEvent * evtP );
-
-        void end();
-
-    protected:
-        std::string _treeFileName;
-        std::string _treeName;
-        int _overwrite;
-        int _evtReminder;
-        TTree *_outputTree;
-        std::ostream *_output;
-        
-        int nMCP, nRecoP, nEvt;
-        
-        std::vector<int> *iStable_v;
-        int ih, iTauP, iTauM, modeTauP, modeTauM;
-        
-        TLorentzVector *t_p4_h, *t_p4_Z, *t_p4_ZJet, *t_p4_TauM, *t_p4_TauMJet, *t_p4_TauP, *t_p4_TauPJet;
-        TLorentzVector *t_p4_vtP, *t_p4_c1P, *t_p4_c2P, *t_p4_c3P, *t_p4_n1P, *t_p4_n2P, *t_p4_n3P;
-        TLorentzVector *t_p4_vtM, *t_p4_c1M, *t_p4_c2M, *t_p4_c3M, *t_p4_n1M, *t_p4_n2M, *t_p4_n3M;
+    TLorentzVector *t_p4_h, *t_p4_Z, *t_p4_ZJet, *t_p4_TauM, *t_p4_TauMJet, *t_p4_TauP, *t_p4_TauPJet;
+    TLorentzVector *t_p4_vtP, *t_p4_c1P, *t_p4_c2P, *t_p4_c3P, *t_p4_n1P, *t_p4_n2P, *t_p4_n3P;
+    TLorentzVector *t_p4_vtM, *t_p4_c1M, *t_p4_c2M, *t_p4_c3M, *t_p4_n1M, *t_p4_n2M, *t_p4_n3M;
 
 
 };

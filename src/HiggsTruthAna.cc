@@ -24,8 +24,9 @@
 #include <algorithm>
 #include <TMath.h>
 
-
 using namespace std;
+using namespace lcio;
+using namespace marlin;
 
 HiggsTruthAna a_ExportEvt_instance;
 
@@ -33,7 +34,7 @@ HiggsTruthAna::HiggsTruthAna()
     : Processor("HiggsTruthAna"),
     _output(0)
 {
-    _description = "Print MC Truth" ;
+    _description = "Analysis Higgs truth info" ;
 
     registerProcessorParameter( "TreeOutputFile" , 
             "The name of the file to which the ROOT tree will be written" ,
@@ -88,8 +89,8 @@ void HiggsTruthAna::init() {
     _outputTree->Branch("modeTauM", &modeTauM, "modeTauM/I"); // Tau+ decay mode
     
     // _outputTree->Branch("ptr_TauMJet_v", "vector<long>", &ptr_TauMJet_v); // stable Tau+ decay products
-    // _outputTree->Branch("ptr_TauPJet_v", "vector<long>", &ptr_TauPJet_v); // Stable Tau- decay products
-    // _outputTree->Branch("ptr_ZjJet_v", "vector<long>", &ptr_ZjJet_v); // Stable Z decay products
+    // _outputTree->Branch("ptr_TauPJet_v", "vector<long>", &ptr_TauPJet_v); // stable Tau- decay products
+    // _outputTree->Branch("ptr_ZjJet_v", "vector<long>", &ptr_ZjJet_v); // stable Z decay products
     
     t_p4_h = new TLorentzVector(0,0,0,0);
     t_p4_Z = new TLorentzVector(0,0,0,0);
@@ -107,7 +108,7 @@ void HiggsTruthAna::init() {
     _outputTree->Branch("t_p4_TauPJet", "TLorentzVector", &t_p4_TauPJet); // 4-mom from Tau+ truth product 
     
     // TauP/M decay product in following notation 
-    // c123 means charged hadron, n123 are neutral pions, vt is tau neutrino
+    // c123=charged hadron, n123=neutral pions, vt=tau neutrino. For leptonic decay c1=e/mu, n1=ve/vm
     // modeTau       vt  c1  c2  c3  n1  n2  n3
     //   1   1h0pi   √   √ 
     //   2   1h1pi   √   √           √
@@ -167,7 +168,7 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
             for (int i=0; i<nMCP; i++)
                 mcp.push_back( dynamic_cast<MCParticle*>(col_MCP->getElementAt(i)) );
             
-            if (nEvt % _evtReminder == 0) cout<<"+++ Evt "<<nEvt<<endl;
+            if (nEvt % _evtReminder == 0)  message<MESSAGE>( log()<<"+++++++++++++++  Processing Evt # "<<nEvt<<"  +++++++++++++++" );
             
             int HDecayTo = -99, ih = -99;
             for (int i=0; i<nMCP; i++)
@@ -194,7 +195,7 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                 if(iTauP>=0 && iTauM>=0) break;
             }
             if (iTauM<0 || iTauP<0)  throw lcio::DataNotAvailableException("Can't find MC tau");
-            cout<<"Bingo!!!  Evt "<<nEvt<<endl;
+            message<MESSAGE>( log()<<"Bingo! This is a htautau event: # "<<nEvt );
             
             
             // find tau+/- decay mode. For each mode, identify muon/elec/pions... as decay product
@@ -323,7 +324,7 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
             vector<MCParticle*> ptr_TauPJet_v;
             vector<MCParticle*> ptr_TauMJet_v;
             std::queue<MCParticle*> ptr_TauP_q, ptr_TauM_q;
-            ptr_TauP_q.push( dynamic_cast<MCParticle*>(col_MCP->getElementAt(iTauP)) ); 
+            ptr_TauP_q.push( dynamic_cast<MCParticle*>(col_MCP->getElementAt(iTauP)) ); // starting point from tau+/-
             ptr_TauM_q.push( dynamic_cast<MCParticle*>(col_MCP->getElementAt(iTauM)) );
             while (ptr_TauP_q.empty()==0){
                 MCParticle* ip = ptr_TauP_q.front();
@@ -334,7 +335,7 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                 }
                 else {
                     if (ip->getDaughters().size()==0) {
-                        // cout<<"Wrong in TauPJet!! No daughters coming out?"<<nEvt<<" "<<ip<<endl;
+                        message<DEBUG>( log()<<"Wrong in TauPJet!! No daughters coming out?"<<nEvt<<" "<<ip );
                     }
                     else // can still decay to secondary particles.
                         for (unsigned k=0; k<ip->getDaughters().size(); k++)
@@ -350,7 +351,7 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                 }
                 else {
                     if (ip->getDaughters().size()==0) {
-                        // cout<<"Wrong in TauMJet!! No daughters coming out?"<<nEvt<<" "<<ip<<endl;
+                        message<DEBUG>( log()<<"Wrong in TauMJet!! No daughters coming out?"<<nEvt<<" "<<ip );
                     }
                     else
                         for(unsigned k=0; k<ip->getDaughters().size(); k++)
@@ -375,10 +376,10 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                     ptemp = ptr_TauMJet_v[k];
                     *t_p4_TauMJet += TLorentzVector( ptr_TauMJet_v[k]->getMomentum(), ptr_TauMJet_v[k]->getEnergy() );
                 }
-            // cout<<"Tau+   "; PrintTLorentzVector(*t_p4_TauP); cout<<endl;
-            // cout<<"Tau+Jet"; PrintTLorentzVector(*t_p4_TauPJet); cout<<endl;
-            // cout<<"Tau-   "; PrintTLorentzVector(*t_p4_TauM); cout<<endl;
-            // cout<<"Tau-Jet"; PrintTLorentzVector(*t_p4_TauMJet); cout<<endl;
+            message<DEBUG>( log()<<"Tau+   "<<TLorentzVector2char(*t_p4_TauP) );
+            message<DEBUG>( log()<<"Tau+Jet"<<TLorentzVector2char(*t_p4_TauPJet) );
+            message<DEBUG>( log()<<"Tau-   "<<TLorentzVector2char(*t_p4_TauM) );
+            message<DEBUG>( log()<<"Tau-Jet"<<TLorentzVector2char(*t_p4_TauMJet) );
             
             
             // Z -> jj, find the last possible iZj1, iZj2
@@ -393,13 +394,13 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                     }
                     break;
                 }
-            while(1){
+            while(1){ // such a lengthy code..:/ just want to get the last Zs that decay to qq/ll
                 MCParticle* daup = ptr_Zj1->getDaughters()[0];
                 if (daup->getPDG() == ptr_Zj1->getPDG()) { // skip the foremost generator particles
                     ptr_Zj1 = ptr_Zj1->getDaughters()[0];
                     ptr_Zj2 = ptr_Zj2->getDaughters()[0];
                 }
-                else if (daup->getPDG()>90){ // what? they merge again
+                else if (daup->getPDG()>90){ // what? they merge again!
                     if (daup->getDaughters()[0]->getPDG() > 0) {
                         ptr_Zj1 = daup->getDaughters()[0];
                         ptr_Zj2 = daup->getDaughters()[1];
@@ -413,7 +414,7 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                 else break;
             }
             // find Z jet segments
-            queue<MCParticle*> ptr_Zj_q;
+            std::queue<MCParticle*> ptr_Zj_q;
             ptr_Zj_q.push( ptr_Zj1 );
             ptr_Zj_q.push( ptr_Zj2 ); 
             while (ptr_Zj_q.empty()==0){
@@ -428,26 +429,32 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                             ptr_Zj_q.push(ip->getDaughters()[k]);
                         }
                     }
-                    // else  cout<<"Wrong in ZJet!! "<<i<<endl;
+                    else {
+                        // message<DEBUG>( log()<<"Wrong in ZJet!! No daughters coming out?"<<nEvt<<" "<<ip );
+                    }
                 }
-            }
+            } // finish collecting truth Z jet
             std::sort(ptr_ZjJet_v.begin(), ptr_ZjJet_v.end());
             *t_p4_h = TLorentzVector( mcp[ih]->getMomentum(), mcp[ih]->getEnergy() ); // mc higgs 4-momentum
             *t_p4_Z = TLorentzVector( ptr_Zj1->getMomentum(), ptr_Zj1->getEnergy() ) + 
                       TLorentzVector( ptr_Zj2->getMomentum(), ptr_Zj2->getEnergy() );
             ptemp = nullptr;
+            int nZjet = 0;
             for (unsigned k=0; k<ptr_ZjJet_v.size(); k++) // mc tau+ jet 4-momentum
                 if (ptemp!=ptr_ZjJet_v[k]) {
                     ptemp = ptr_ZjJet_v[k];
                     *t_p4_ZJet += TLorentzVector( ptr_ZjJet_v[k]->getMomentum(), ptr_ZjJet_v[k]->getEnergy() );
+                    nZjet++;
                 }
+            message<DEBUG>( log()<<"Higgs  "<<TLorentzVector2char(*t_p4_h)<<"  mass:  "<<t_p4_h->M() );
+            message<DEBUG>( log()<<"Z      "<<TLorentzVector2char(*t_p4_Z)<<"  mass:  "<<t_p4_Z->M() );
+            message<DEBUG>( log()<<"ZJet   "<<TLorentzVector2char(*t_p4_ZJet)<<"  mass: "<<t_p4_ZJet->M()<<"  #Jet: "<<nZjet );
             
-            // cout<<"Higgs "; PrintTLorentzVector(*t_p4_h); cout<<" mass: "<<t_p4_h->M()<<endl;
-            // cout<<"Z     "; PrintTLorentzVector(*t_p4_Z); cout<<" mass: "<<t_p4_Z->M()<<endl;
-            // cout<<"Z Jet "; PrintTLorentzVector(*t_p4_ZJet); cout<<" mass: "<<t_p4_ZJet->M()<<endl;
             _outputTree->Fill();
         } 
-        catch (lcio::DataNotAvailableException err) { /*  cout<<err.what()<<endl;*/ }
+        catch (lcio::DataNotAvailableException err) { 
+            // message<DEBUG>( log()<<err.what() ); 
+        }
     } 
 } 
 

@@ -1,0 +1,23 @@
+<marlin>
+   
+<execute>
+    <processor name="MyParticleList"/>
+</execute>
+
+<global>
+    <parameter name="LCIOInputFiles"> /cefs/higgs/licq/sample/Reco.qqh.00001.slcio  </parameter>
+    <parameter name="GearXMLFile" value="GearOutput.xml"/>
+    <parameter name="MaxRecordNumber" value="1"/>
+    <parameter name="SkipNEvents" value="0"/>
+    <parameter name="SupressCheck" value="false"/>
+    <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE </parameter>
+    <parameter name="RandomSeed" value="1234567890" />
+</global>
+
+<processor name="MyParticleList" type="ParticleList">
+    <parameter name="MCCollectionName" type="string"> MCParticlesSkimmed </parameter>
+    <parameter name="RecoCollectionName" type="string"> ArborPFOs </parameter>
+    <parameter name="Verbosity" type="string"> MESSAGE </parameter>
+</processor>
+
+</marlin>
