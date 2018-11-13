@@ -282,7 +282,7 @@ void HiggsTruthAna::processEvent( LCEvent * evtP )
                     *ivt = tptr[0]; *ic1=tptr[3]; *ic2=tptr[4]; *ic3=tptr[5]; *in1=tptr[1]; *in2=tptr[2];
                 }
                 else if(tdecay.size()==7 && tdecay[0]==16 && tdecay[1]==111 && tdecay[2]==111 && tdecay[3]==111 && tdecay[4]==211 && tdecay[5]==211 && tdecay[6]==211){
-                    *modeTau = 14; // ta- > vt 3h+- pi0 pi0
+                    *modeTau = 14; // ta- > vt 3h+- pi0 pi0 pi0
                     *ivt = tptr[0]; *ic1=tptr[4]; *ic2=tptr[5]; *ic3=tptr[6]; *in1=tptr[1]; *in2=tptr[2]; *in3=tptr[3];
                 }
                 else  *modeTau = 100; //others (kaon)
