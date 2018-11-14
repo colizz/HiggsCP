@@ -2,8 +2,7 @@
 run/
 build/
 lib/
-script/sub_file/
-fastjet*
+sub_jobs/
 
 ## files
 *.slcio
