@@ -26,13 +26,19 @@ First you need to have simulated MC files. You can find all freshly prepared sig
 >- Run `Marlin reco_001.xml` and wait for years.
 
 ## Setup
-Like normal [*`Marlin` framework*](https://github.com/iLCSoft/Marlin), codes are established under `src/`, head files under `include/`, and a steering file `steer.xml` is required to define Marlin Processor. To setup the package, run the code under a machine where `Marlin` is already installed.
+Like normal [`Marlin` framework](https://github.com/iLCSoft/Marlin), codes are established under `src/`, head files under `include/`, and a steering file `steer.xml` is required to define Marlin Processor. To setup the package, run the code under a machine where `Marlin` is already installed.
 
 ```sh
-git clone https://:@gitlab.cern.ch:8443/coli/HiggsCP.git HiggsCP
+git clone https://github.com/colizz/HiggsCP.git HiggsCP
 cd HiggsCP
 mkdir build run && cd build
-cmake -C /afs/ihep.ac.cn/soft/common/gcc/v01-17-05/ILCSoft.cmake .. ## path only available on IHEP environment
+
+# install iLCSoft environment, this command is only availble on IHEP,
+# please check the cmake file. Otherwise you need to download essential
+# [iLCSoft](https://github.com/iLCSoft) software and modify the directories in your cmake file.
+cmake -C ../ILCSoft.cmake .. 
+
+# build the package
 make install
 ```
 Before the first run, please specify your own absolute path in `loadLDD.sh` and `steer.xml` by substituting paths containing `.../licq/HiggsCP/...`. Then try this:
@@ -53,3 +59,17 @@ After some while you will find output root files under ......
 
 To be continue...
 ------------
+
+Draft:
+The possible bkg:
+- ee->ZZ, Z->tautau, Z->ll(jj)
+- ee->Zh, Z->tautau, h->bb
+- ee->Zh, Z->tautau, h->lvlv(l=e,mu,tau)
+
+for ee->ZZ, dominant bkg in CPEC terminology are
+- zz_sl_tau_up(down)  200889
+- zz_l_taumu  88577 -->/cefs/higgs/xuyue/Reco_SMbkg/Reco_zz/taumu
+- sze_l_tau  758207
+
+
+
